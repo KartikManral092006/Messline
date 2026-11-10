@@ -17,6 +17,19 @@ export const metadata: Metadata = {
   title: "Kitchen | Messline",
 };
 
+const ERROR_MESSAGES: Record<string, string> = {
+  duplicate: "A service for this meal and date already exists.",
+  cutoff_past: "Cutoff must be in the future.",
+  no_dishes: "At least one dish must have a plate count.",
+  invalid_count: "Plate counts must be positive integers.",
+  invalid_date: "Please provide a valid service date.",
+  invalid_cutoff: "Please provide a valid cutoff date and time.",
+  invalid_meal: "Please select a valid meal.",
+  invalid_id: "Invalid service ID.",
+  not_found: "Service not found.",
+  failed: "An unexpected error occurred. Please try again.",
+};
+
 function calendarDate(offsetDays: number) {
   const now = new Date();
   return new Date(
@@ -42,6 +55,7 @@ function mealLabel(meal: string) {
 
 function formatCutoff(d: Date) {
   return d.toLocaleString("en-IN", {
+    timeZone: "Asia/Kolkata",
     day: "numeric",
     month: "short",
     hour: "numeric",
@@ -65,12 +79,12 @@ async function handleCreateService(formData: FormData) {
 
   const parsed = parseCreateServiceFormData(formData, activeIds);
   if (!parsed.success) {
-    redirect(`/kitchen?error=${encodeURIComponent(parsed.error)}`);
+    redirect(`/kitchen?error=${parsed.errorCode}`);
   }
 
   const result = await createService(parsed.data);
   if (!result.ok) {
-    redirect(`/kitchen?error=${encodeURIComponent(result.error)}`);
+    redirect(`/kitchen?error=${result.errorCode}`);
   }
 
   revalidatePath("/kitchen");
@@ -87,12 +101,12 @@ async function handlePublishService(formData: FormData) {
 
   const serviceId = formData.get("serviceId");
   if (typeof serviceId !== "string" || !serviceId) {
-    redirect(`/kitchen?error=${encodeURIComponent("Invalid service ID")}`);
+    redirect("/kitchen?error=invalid_id");
   }
 
   const result = await publishService(serviceId);
   if (!result.ok) {
-    redirect(`/kitchen?error=${encodeURIComponent(result.error)}`);
+    redirect(`/kitchen?error=${result.errorCode}`);
   }
 
   revalidatePath("/kitchen");
@@ -163,14 +177,14 @@ export default async function KitchenPage({
         Signed in as {user.name} ({user.role.toLowerCase()})
       </p>
 
-      {searchParams.error && (
+      {searchParams.error && ERROR_MESSAGES[searchParams.error] ? (
         <div
           role="alert"
           className="mt-4 rounded border border-red-200 bg-red-50 p-3 text-sm text-red-700"
         >
-          {searchParams.error}
+          {ERROR_MESSAGES[searchParams.error]}
         </div>
-      )}
+      ) : null}
 
       {searchParams.created && (
         <div
@@ -354,4 +368,3 @@ export default async function KitchenPage({
     </main>
   );
 }
-
