@@ -154,8 +154,7 @@ export default async function Home({
         )}
       </div>
       <p className="mt-2 text-sm leading-6 text-neutral-700">
-        Sign-in and ratings work. Creating bookings and complaints don&apos;t have a
-        page yet. Take a task from an issue.
+        Sign-in, ratings, bookings, and complaints work. Take a task from an issue.
       </p>
 
       {message && (
