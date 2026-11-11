@@ -33,6 +33,17 @@ function mealLabel(meal: string) {
   return meal.charAt(0).toUpperCase() + meal.slice(1).toLowerCase();
 }
 
+const statusLabels: Record<string, string> = {
+  BOOKED: "Booked",
+  CANCELLED: "Cancelled",
+  SERVED: "Served",
+  NO_SHOW: "No-show",
+};
+
+function statusLabel(status: string) {
+  return statusLabels[status] ?? status;
+}
+
 const cancelMessages: Record<string, string> = {
   cancelled: "Cancelled.",
   "not-found": "Booking not found.",
@@ -167,7 +178,7 @@ export default async function BookingsPage({
                       <span className="mr-2 text-xs text-neutral-500 sm:hidden">
                         Status
                       </span>
-                      {booking.status}
+                      {statusLabel(booking.status)}
                     </td>
                     <td className="block py-0.5 sm:table-cell sm:py-2">
                       {booked && (
