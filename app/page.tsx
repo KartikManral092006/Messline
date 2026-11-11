@@ -139,8 +139,28 @@ export default async function Home({
           <form action={signOut} className="flex items-center gap-3">
             <span>Signed in as {user.name} ({user.role.toLowerCase()})</span>
             {user.role === "STUDENT" && (
-              <Link href="/bookings" className="underline">
-                My bookings
+              <>
+                <Link href="/bookings" className="underline">
+                  My bookings
+                </Link>
+                <Link href="/complaints" className="underline">
+                  Complaints
+                </Link>
+              </>
+            )}
+            {user.role === "KITCHEN" && (
+              <>
+                <Link href="/kitchen" className="underline">
+                  Kitchen
+                </Link>
+                <Link href="/kitchen/bookings" className="underline">
+                  Bookings
+                </Link>
+              </>
+            )}
+            {user.role === "SECRETARY" && (
+              <Link href="/secretary/complaints" className="underline">
+                Complaints
               </Link>
             )}
             <button type="submit" className="underline">
