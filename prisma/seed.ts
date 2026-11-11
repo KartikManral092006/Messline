@@ -1,4 +1,4 @@
-import { ComplaintStatus, Meal, PrismaClient, Role } from "@prisma/client";
+import { BookingStatus, ComplaintStatus, Meal, PrismaClient, Role } from "@prisma/client";
 import { hash } from "bcryptjs";
 
 const prisma = new PrismaClient();
@@ -9,6 +9,7 @@ const prisma = new PrismaClient();
 // Yesterday lunch: sambar, cutoff already passed, so a complaint has a dish to attach to.
 // Complaints: Meera has one open complaint about yesterday's sambar.
 // Reviews: veg thali has two, biryani and sambar have one, poha and boiled eggs have none.
+// Bookings: Meera has one BOOKED booking, 1 veg thali at today's lunch (veg thali shows 39 / 40).
 
 function calendarDate(offsetDays: number) {
   const now = new Date();
@@ -168,7 +169,7 @@ async function main() {
         serviceId: todayLunch.id,
         menuItemId: thali.id,
         quantityTotal: 40,
-        quantityLeft: 40,
+        quantityLeft: 39, // Meera's seeded booking takes 1
       },
       {
         serviceId: todayLunch.id,
@@ -215,6 +216,22 @@ async function main() {
       serviceId: yesterdayLunch.id,
       body: "Sambar was cold and too watery.",
       status: ComplaintStatus.OPEN,
+    },
+  });
+
+  // One booking: Meera, 1 veg thali at today's lunch. quantityLeft above is already 39.
+  const thaliOffering = await prisma.offering.findUniqueOrThrow({
+    where: {
+      serviceId_menuItemId: { serviceId: todayLunch.id, menuItemId: thali.id },
+    },
+  });
+
+  await prisma.booking.create({
+    data: {
+      userId: meera.id,
+      offeringId: thaliOffering.id,
+      count: 1,
+      status: BookingStatus.BOOKED,
     },
   });
 }
