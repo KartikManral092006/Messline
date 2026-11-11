@@ -128,11 +128,13 @@ export default async function BookingsPage({
           <table className="block w-full border-collapse text-left text-sm sm:table">
             <thead className="hidden sm:table-header-group">
               <tr className="border-b border-neutral-300">
-                <th className="py-2 pr-3 font-medium">When</th>
-                <th className="py-2 pr-3 font-medium">Dish</th>
-                <th className="py-2 pr-3 font-medium">Count</th>
-                <th className="py-2 pr-3 font-medium">Status</th>
-                <th className="py-2 font-medium"></th>
+                <th scope="col" className="py-2 pr-3 font-medium">When</th>
+                <th scope="col" className="py-2 pr-3 font-medium">Dish</th>
+                <th scope="col" className="py-2 pr-3 font-medium">Count</th>
+                <th scope="col" className="py-2 pr-3 font-medium">Status</th>
+                <th scope="col" className="py-2 font-medium">
+                  <span className="sr-only">Actions</span>
+                </th>
               </tr>
             </thead>
             <tbody className="block sm:table-row-group">
