@@ -31,6 +31,10 @@ function mealLabel(meal: string) {
   return meal.charAt(0).toUpperCase() + meal.slice(1).toLowerCase();
 }
 
+function statusLabel(status: string) {
+  return status.charAt(0).toUpperCase() + status.slice(1).toLowerCase();
+}
+
 export default async function ComplaintsPage() {
   const user = await getCurrentUser();
   if (!user) redirect("/login");
@@ -96,7 +100,7 @@ export default async function ComplaintsPage() {
                           : "bg-emerald-100 text-emerald-800"
                       }`}
                     >
-                      {complaint.status}
+                      {statusLabel(complaint.status)}
                     </span>
                   </td>
                 </tr>
